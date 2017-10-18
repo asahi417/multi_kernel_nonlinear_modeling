@@ -1,3 +1,3 @@
-from .simulator import nonlinear_siganl_1d, nonlinear_siganl_2d
+from .simulator import nonlinear_signal_1d, nonlinear_signal_2d
 from .multi_kernel_regressor import MultiKernelRegressor
 from .multi_kernel_regressor_pda import MultiKernelRegressorPDA
