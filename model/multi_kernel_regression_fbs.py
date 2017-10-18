@@ -3,7 +3,12 @@ from progressbar import ProgressBar
 from . import kernel
 
 
-class MultiKernelRegressorPDA:
+class MultiKernelRegressionFBS:
+
+    r_dict_size = None
+    r_error = None
+    dict = None
+    co = None
 
     def __init__(self, eta0=0.3, alpha_element=10**-4, alpha_dict=10**-4, eps=10**-5, dictionary_th=10**-5,
                  dict_size=10, kernel_type="gauss_norm", kernel_parameter=[0.01, 0.1]):
@@ -20,7 +25,7 @@ class MultiKernelRegressorPDA:
         elif kernel_type == "gauss":
             self.kernel = kernel.gauss
 
-    def fit(self, x, y):
+    def fit(self, __x, __y):
         """
 
         double regularizer
@@ -29,8 +34,8 @@ class MultiKernelRegressorPDA:
 
          Parameters
         ---------------------------------------
-        x: input, shape (full size, feature)
-        y: output, shape (full size)
+        __x: input, shape (full size, feature)
+        __y: output, shape (full size)
         dict: (dictionary point, feature)
         co: coefficient (kernel number, dictionary point)
         """
@@ -39,26 +44,23 @@ class MultiKernelRegressorPDA:
         self.r_dict_size = []
         self.r_error = []
 
-        self.dict = np.empty((0, x.shape[1]))
+        self.dict = np.empty((0, __x.shape[1]))
         self.co = np.empty((len(self.kernel_p), 0))
 
-        p = ProgressBar(maxval=len(y))
+        p = ProgressBar(maxval=len(__y))
         _dict_norm = np.empty(0)
         gamma = 2/(2/(self.eta0+self.eps)-1)
 
-        # sum_grad = np.zeros((len(self.kernel_p), 1))
-        sum_grad = np.empty((len(self.kernel_p), 0))
-
-        for ind, (_x, _y) in enumerate(zip(x, y)):
-            # add new mesurement to dictionary and coefficient
+        for ind, (_x, _y) in enumerate(zip(__x, __y)):
+            # add new input to dictionary and coefficient
             self.dict = np.vstack([self.dict, _x])
             _dict_norm = np.hstack([_dict_norm, 0])  # shape (dictionary point, )
             self.co = np.hstack([self.co, np.zeros((len(self.kernel_p), 1))])
-            sum_grad = np.hstack([sum_grad, np.zeros((len(self.kernel_p), 1))])
             assert len(self.dict) == self.co.shape[1]
 
             # update coefficient
-            _k = np.array([self.kernel(self.dict, _x, _p) for _p in self.kernel_p]) # shape (kernel number, dictionary point)
+            # shape (kernel number, dictionary point)
+            _k = np.array([self.kernel(self.dict, _x, _p) for _p in self.kernel_p])
             assert _k.shape == self.co.shape
             prediction = (_k*self.co).sum()
             error = prediction - _y
@@ -71,14 +73,13 @@ class MultiKernelRegressorPDA:
             _reg = self.co*_reg*(_reg > 0)
             assert _reg.shape == self.co.shape
             _reg = (self.co-_reg)/gamma
-
-            # sum gradient
-            # print(_loss.shape, _reg.shape, sum_grad.shape)
-            sum_grad += _loss + _reg
-            _reg = 1-self.alpha_element/(np.abs(sum_grad)+self.eps)  # shape (kernel number, dictionary point)
+            # update
+            self.co += - self.eta0 * (_loss + _reg)
+            # proximity
+            _reg = 1-self.eta0*self.alpha_element/(np.abs(self.co)+self.eps)  # shape (kernel number, dictionary point)
             # _reg[_reg < 0] = 0
             assert self.co.shape == _reg.shape
-            self.co = - self.eta0*sum_grad*_reg*(_reg > 0)
+            self.co = self.co*_reg*(_reg > 0)
 
             # refine dictionary
             _dict_norm = (self.co*self.co).sum(0)  # shape (dictionary point, )
@@ -87,7 +88,6 @@ class MultiKernelRegressorPDA:
                 self.dict = self.dict[_index]
                 self.co = self.co.T[_index].T
                 _dict_norm = _dict_norm[_index]
-                sum_grad = sum_grad.T[_index].T
 
             # record variables
             self.r_dict_size.append(len(self.dict))
@@ -96,8 +96,9 @@ class MultiKernelRegressorPDA:
             # progressbar
             p.update(ind+1)
 
+
 if __name__ == '__main__':
-    mm = MultiKernelRegressorPDA()
+    mm = MultiKernelRegressor()
     x = np.ones((100, 3))
     y = np.arange(100)
     mm.fit(x, y)

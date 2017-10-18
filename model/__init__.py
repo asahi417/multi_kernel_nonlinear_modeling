@@ -1,3 +1,3 @@
 from .simulator import nonlinear_signal_1d, nonlinear_signal_2d
-from .multi_kernel_regressor import MultiKernelRegressor
-from .multi_kernel_regressor_pda import MultiKernelRegressorPDA
+from .multi_kernel_regression_fbs import MultiKernelRegressionFBS
+from .multi_kernel_regression_pda import MultiKernelRegressionPDA

@@ -18,7 +18,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 
-def plot_signal_1d(n=1000):
+def plot_signal_1d(n=1000, save_path=None):
     x, y, n = nonlinear_signal_1d(n)
     plt.rcParams['font.family'] = 'Times New Roman'
     plt.rcParams['font.size'] = 15
@@ -27,6 +27,8 @@ def plot_signal_1d(n=1000):
     plt.grid()
     plt.xlabel("Input", fontsize=20)
     plt.ylabel("Output", fontsize=20)
+    if save_path is not None:
+        plt.savefig(save_path, bbox_inches="tight")
     plt.show()
 
 
@@ -38,7 +40,7 @@ def nonlinear_signal_1d(size=10000, noise_std=0.01):
     return _x, _y, _y_noise
 
 
-def plot_signal_2d(n=1000, c_n=50, domain=[-1, 1]):
+def plot_signal_2d(n=1000, c_n=50, domain=[-1, 1], save_path=None):
     plt.rcParams['font.family'] = 'Times New Roman'
     plt.rcParams['font.size'] = 15
 
@@ -60,6 +62,8 @@ def plot_signal_2d(n=1000, c_n=50, domain=[-1, 1]):
     plt.gca().set_aspect('equal')
     plt.xlabel("In 1", fontsize=20)
     plt.ylabel("In 2", fontsize=20)
+    if save_path is not None:
+        plt.savefig(save_path, bbox_inches="tight")
     plt.show()
 
 
