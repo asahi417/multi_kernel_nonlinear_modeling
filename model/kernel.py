@@ -5,6 +5,7 @@ _x: dictionary point, shape (data number, feature) or (feature,)
 _y: input, shape (feature,)
 """
 
+
 def gauss_norm(_x, _y, _s):
     """
     Normalized RBF kernel
@@ -13,6 +14,7 @@ def gauss_norm(_x, _y, _s):
     distance = ((_x - _y)**2).sum(1)
     assert len(distance) == len(_x)
     return np.exp(-distance/2/_s)/(2*np.pi*_s)**(len(_y)/2)
+
 
 def gauss(_x, _y, _s):
     """

@@ -28,9 +28,9 @@ class MultiKernelRegressionFBS:
     def fit(self, __x, __y):
         """
 
-        double regularizer
-        - dictionary point wise regularizer
-        - element wise regularizer
+        double regularize
+        - dictionary point wise regularize
+        - element wise regularize
 
          Parameters
         ---------------------------------------
@@ -98,7 +98,7 @@ class MultiKernelRegressionFBS:
 
 
 if __name__ == '__main__':
-    mm = MultiKernelRegressor()
+    mm = MultiKernelRegressionFBS()
     x = np.ones((100, 3))
     y = np.arange(100)
     mm.fit(x, y)

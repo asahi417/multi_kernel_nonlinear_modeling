@@ -1,3 +1,7 @@
 from .simulator import nonlinear_signal_1d, nonlinear_signal_2d
 from .multi_kernel_regression_fbs import MultiKernelRegressionFBS
 from .multi_kernel_regression_pda import MultiKernelRegressionPDA
+
+from .multi_kernel_regression_fbs01 import MultiKernelRegressionFBS01
+from .multi_kernel_regression_pda01 import MultiKernelRegressionPDA01
+from .grid_search import grid_search

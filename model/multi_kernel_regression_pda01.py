@@ -3,18 +3,17 @@ from progressbar import ProgressBar
 from . import kernel
 
 
-class MultiKernelRegressionPDA:
+class MultiKernelRegressionPDA01:
 
     r_dict_size = None
     r_error = None
     dict = None
     co = None
 
-    def __init__(self, eta0=0.3, alpha_element=10**-4, alpha_dict=10**-4, eps=10**-5, dictionary_th=10**-5,
+    def __init__(self, eta0=0.3, alpha_dict=10**-4, eps=10**-5, dictionary_th=10**-5,
                  dict_size=10, kernel_type="gauss_norm", kernel_parameter=[0.01, 0.1]):
         self.eta0 = eta0
         self.alpha_dict = alpha_dict
-        self.alpha_element = alpha_element
         self.eps = eps
         self.dict_th = dictionary_th
         self.dict_size = dict_size
@@ -49,7 +48,6 @@ class MultiKernelRegressionPDA:
 
         p = ProgressBar(maxval=len(__y))
         _dict_norm = np.empty(0)
-        gamma = 2/(2/(self.eta0+self.eps)-1)
 
         sum_grad = np.empty((len(self.kernel_p), 0))
 
@@ -59,30 +57,14 @@ class MultiKernelRegressionPDA:
             _dict_norm = np.hstack([_dict_norm, 0])  # shape (dictionary point, )
             self.co = np.hstack([self.co, np.zeros((len(self.kernel_p), 1))])
             sum_grad = np.hstack([sum_grad, np.zeros((len(self.kernel_p), 1))])
-            assert len(self.dict) == self.co.shape[1]
-
             # update coefficient
             # shape (kernel number, dictionary point)
             _k = np.array([self.kernel(self.dict, _x, _p) for _p in self.kernel_p])
-            assert _k.shape == self.co.shape
             prediction = (_k*self.co).sum()
             error = prediction - _y
             # gradient of loss
-            _loss = error*_k/(np.trace(_k.dot(_k.T))+self.eps)
-            assert len(self.dict) == self.co.shape[1]
-            # gradient of reg
-            _reg = 1 - gamma*self.alpha_dict/(_dict_norm+self.eps)  # shape (dictionary point, )
-            assert len(_reg) == len(self.dict)
-            _reg = self.co*_reg*(_reg > 0)
-            assert _reg.shape == self.co.shape
-            _reg = (self.co-_reg)/gamma
-
-            # sum gradient
-            # print(_loss.shape, _reg.shape, sum_grad.shape)
-            sum_grad += _loss + _reg
-            _reg = 1-self.alpha_element/(np.abs(sum_grad)+self.eps)  # shape (kernel number, dictionary point)
-            # _reg[_reg < 0] = 0
-            assert self.co.shape == _reg.shape
+            sum_grad += error*_k/(np.trace(_k.dot(_k.T))+self.eps)
+            _reg = 1-self.alpha_dict/(np.abs(_dict_norm)+self.eps)  # shape (kernel number, dictionary point)
             self.co = - self.eta0*sum_grad*_reg*(_reg > 0)
 
             # refine dictionary
@@ -103,7 +85,7 @@ class MultiKernelRegressionPDA:
 
 
 if __name__ == '__main__':
-    mm = MultiKernelRegressionPDA()
+    mm = MultiKernelRegressionPDA01()
     x = np.ones((100, 3))
     y = np.arange(100)
     mm.fit(x, y)
