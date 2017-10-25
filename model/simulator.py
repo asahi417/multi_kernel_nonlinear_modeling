@@ -15,10 +15,11 @@
 
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
 
 
 def plot_signal_1d(n=1000, save_path=None):
+    from matplotlib import pyplot as plt
+
     x, y, n = nonlinear_signal_1d(n)
     plt.rcParams['font.family'] = 'Times New Roman'
     plt.rcParams['font.size'] = 15
@@ -41,6 +42,8 @@ def nonlinear_signal_1d(size=10000, noise_std=0.01):
 
 
 def plot_signal_2d(n=1000, c_n=50, domain=[-1, 1], save_path=None):
+    from matplotlib import pyplot as plt
+
     plt.rcParams['font.family'] = 'Times New Roman'
     plt.rcParams['font.size'] = 15
 

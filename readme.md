@@ -10,3 +10,4 @@ Visualize nonlinear function used in the simulation.
 - Yukawa, Masahiro, and Ryu-ichiro Ishii. "On adaptivity of online model selection method based on multikernel adaptive filtering." Signal and Information Processing Association Annual Summit and Conference (APSIPA), 2013 Asia-Pacific. IEEE, 2013. 
 - Yukawa, Masahiro, and Ryu-ichiro Ishii. "Online model selection and learning by multikernel adaptive filtering." Signal Processing Conference (EUSIPCO), 2013 Proceedings of the 21st European. IEEE, 2013.
 - Yukawa, Masahiro. "Multikernel adaptive filtering." IEEE Transactions on Signal Processing 60.9 (2012): 4672-4682.
+w
