@@ -39,7 +39,8 @@ def ma(target, window):
     return [np.mean(target[_s:_s + window]) for _s in range(len(target) - window)]
 
 
-def plot_full(error, dictionary, name, window=50, save_path=None, out_legend=True, remove_key=None, target_key=None):
+def plot_full(error, dictionary, name, window=50, save_path=None, out_legend=True, remove_key=None, target_key=None,
+              x_label=[None, None], y_label=[None, None]):
     """ Plot result of multiple result """
 
     from matplotlib import pyplot as plt
@@ -58,6 +59,14 @@ def plot_full(error, dictionary, name, window=50, save_path=None, out_legend=Tru
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0, fontsize=14)
     else:
         plt.legend(loc="upper left")
+    if y_label[0] is None:
+        plt.ylabel("Number of nonzero components", fontsize=20)
+    else:
+        plt.ylabel(y_label)
+    if x_label[0] is None:
+        plt.xlabel("Iteration")
+    else:
+        plt.xlabel(x_label)
     if save_path is not None:
         plt.savefig(save_path+"_dict.eps", bbox_inches="tight")
     plt.show()
@@ -74,6 +83,14 @@ def plot_full(error, dictionary, name, window=50, save_path=None, out_legend=Tru
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0, fontsize=14)
     else:
         plt.legend(loc="upper left")
+    if y_label[1] is None:
+        plt.ylabel("MSE")
+    else:
+        plt.ylabel(y_label)
+    if x_label[1] is None:
+        plt.xlabel("Iteration")
+    else:
+        plt.xlabel(x_label)
     if save_path is not None:
         plt.savefig(save_path+"_loss.eps", bbox_inches="tight")
     plt.show()

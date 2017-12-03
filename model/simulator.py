@@ -22,12 +22,12 @@ def plot_signal_1d(n=1000, save_path=None):
 
     x, y, n = nonlinear_signal_1d(n)
     plt.rcParams['font.family'] = 'Times New Roman'
-    plt.rcParams['font.size'] = 15
+    plt.rcParams['font.size'] = 18
     _df = pd.Series(y, index=x.flatten()).sort_index()
     _df.plot()
     plt.grid()
-    plt.xlabel("Input", fontsize=20)
-    plt.ylabel("Output", fontsize=20)
+    plt.xlabel("Input")
+    plt.ylabel("Output")
     if save_path is not None:
         plt.savefig(save_path, bbox_inches="tight")
     plt.show()
@@ -41,11 +41,11 @@ def nonlinear_signal_1d(size=10000, noise_std=0.01):
     return _x, _y, _y_noise
 
 
-def plot_signal_2d(n=1000, c_n=50, domain=[-1, 1], save_path=None):
+def plot_signal_2d(n=1000, c_n=50, domain=[-1, 1], save_path=None, x_label=None, y_label=None):
     from matplotlib import pyplot as plt
 
     plt.rcParams['font.family'] = 'Times New Roman'
-    plt.rcParams['font.size'] = 15
+    plt.rcParams['font.size'] = 18
 
     _x1 = np.linspace(domain[0], domain[1], n)
     _x2 = np.linspace(domain[0], domain[1], n)
@@ -63,8 +63,14 @@ def plot_signal_2d(n=1000, c_n=50, domain=[-1, 1], save_path=None):
     plt.contour(_x1, _x2, _y, c_n)
     plt.colorbar()
     plt.gca().set_aspect('equal')
-    plt.xlabel("In 1", fontsize=20)
-    plt.ylabel("In 2", fontsize=20)
+    if x_label is None:
+        plt.xlabel("In 1")
+    else:
+        plt.xlabel(x_label)
+    if y_label is None:
+        plt.ylabel("In 2")
+    else:
+        plt.ylabel(y_label)
     if save_path is not None:
         plt.savefig(save_path, bbox_inches="tight")
     plt.show()
